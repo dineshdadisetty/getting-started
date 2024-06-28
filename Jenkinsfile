@@ -10,9 +10,14 @@ pipeline {
     stages {
         stage('Build and Push') {
             steps {
-                sh "docker build -t docker/getting-started ."
-                withDockerRegistry([url: "https://registry.hub.docker.com", credentialsId: "docker-hub-credentials"]) {
-                    sh "docker push docker/getting-started"
+                script {
+                    // Build Docker image
+                    sh "docker build -t docker/getting-started ."
+                    
+                    // Push Docker image to registry
+                    withDockerRegistry([url: "https://registry.hub.docker.com", credentialsId: "docker-hub-credentials"]) {
+                        sh "docker push docker/getting-started"
+                    }
                 }
             }
         }
