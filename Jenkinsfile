@@ -1,27 +1,15 @@
 pipeline {
     agent any
-    
-    environment {
-        registryCredentials = credentials('dineshdadisetty')  // Credential ID for Docker registry
-        dockerImage = 'docker:20.10.9'  // Example Docker image with Docker CLI installed
-    }
-
     stages {
-        stage('Build and Push') {
+        stage('Checkout') {
             steps {
                 script {
-                    // Pull Docker image (optional, if needed)
-                    sh "docker pull $dockerImage"
-                    
-                    // Build Docker image
-                    sh "docker build -t docker/getting-started ."
-                    
-                    // Push Docker image to registry
-                    withDockerRegistry(credentialsId: registryCredentials, url: "https://registry.hub.docker.com") {
-                        sh "docker push docker/getting-started"
-                    }
+                    checkout([$class: 'GitSCM', 
+                              branches: [[name: '*/main']],
+                              userRemoteConfigs: [[url: 'https://github.com/dineshdadisetty/getting-started', credentialsId: 'dineshdadisetty']]])
                 }
             }
         }
+        // Add more stages as needed
     }
 }
