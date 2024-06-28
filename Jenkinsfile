@@ -1,21 +1,23 @@
 pipeline {
-    agent {
-        docker {
-            // Use an appropriate Docker image that has Docker installed
-            image 'docker:26.1.1'  // Example image with Docker installed
-            registryUrl 'https://registry.hub.docker.com'  // Example registry URL
-            registryCredentialsId 'dineshdadisetty'  // Credentials for Docker registry
-        }
+    agent any
+    
+    environment {
+        registryCredentials = credentials('dineshdadisetty')  // Credential ID for Docker registry
+        dockerImage = 'docker:20.10.9'  // Example Docker image with Docker CLI installed
     }
+
     stages {
         stage('Build and Push') {
             steps {
                 script {
+                    // Pull Docker image (optional, if needed)
+                    sh "docker pull $dockerImage"
+                    
                     // Build Docker image
                     sh "docker build -t docker/getting-started ."
                     
                     // Push Docker image to registry
-                    withDockerRegistry([url: "https://registry.hub.docker.com", credentialsId: "docker-hub-credentials"]) {
+                    withDockerRegistry(credentialsId: registryCredentials, url: "https://registry.hub.docker.com") {
                         sh "docker push docker/getting-started"
                     }
                 }
