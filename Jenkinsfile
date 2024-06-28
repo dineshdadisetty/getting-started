@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('build and push') {
             when {
-                branch 'master'
+                branch 'main'
             }
             steps {
                 sh "docker build -t docker/getting-started ."
