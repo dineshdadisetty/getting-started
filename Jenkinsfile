@@ -3,7 +3,7 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
     }
     agent {
-        label 'ubuntu-1804 && amd64 && docker'
+        label 'Mac OS X && x86_64 && docker'
     }
     stages {
         stage('build and push') {
