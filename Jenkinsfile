@@ -7,9 +7,7 @@ pipeline {
     }
     stages {
         stage('build and push') {
-            when {
-                branch 'main'
-            }
+           
             steps {
                 sh "docker build -t docker/getting-started ."
                 withDockerRegistry([url: "", credentialsId: "dineshdadisetty"]) {
