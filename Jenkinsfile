@@ -6,7 +6,16 @@ pipeline {
         label 'ubuntu-1804 && amd64 && docker'
     }
     stages {
-        stage('build and push') {
+        stage('Checkout') {
+            steps {
+                script {
+                    checkout([$class: 'GitSCM', 
+                              branches: [[name: '*/main']],
+                              userRemoteConfigs: [[url: 'https://github.com/dineshdadisetty/getting-started', credentialsId: 'dineshdadisetty']]])
+                }
+            }
+        }
+        stage('Build and Push') {
             when {
                 branch 'main'
             }
