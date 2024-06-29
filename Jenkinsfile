@@ -1,15 +1,22 @@
 pipeline {
-    agent any
+    options {
+        timeout(time: 1, unit: 'HOURS')
+    }
+    agent {
+        label 'ubuntu-1804 && amd64 && docker'
+    }
     stages {
-        stage('Checkout') {
+        stage('build and push') {
+            when {
+                branch 'master'
+            }
+            sh "docker build -t docker/getting-started ."
+
             steps {
-                script {
-                    checkout([$class: 'GitSCM', 
-                              branches: [[name: '*/main']],
-                              userRemoteConfigs: [[url: 'https://github.com/dineshdadisetty/getting-started', credentialsId: 'dineshdadisetty']]])
+                withDockerRegistry([url: "", credentialsId: "dineshdadisetty"]) {
+                    sh("docker push docker/getting-started")
                 }
             }
         }
-        // Add more stages as needed
     }
 }
